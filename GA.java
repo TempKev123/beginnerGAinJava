@@ -1,52 +1,95 @@
+import java.util.Arrays;
 import java.util.Random;
 
 public class GA {
-    public static int[] generateRandomBinaryArray() {
+    public static int[] generateRandomArray() {
         int[] binaryArray = new int[4];
         Random random = new Random();
         for (int i = 0; i < binaryArray.length; i++) {
-            binaryArray[i] = random.nextInt(2); // Generates 0 or 1
+            binaryArray[i] = random.nextInt(31); // Generates four under 30 numbers
         }
         return binaryArray;
     }
 
-    public static int decodeBinary(int[] bits){
-        int result = 0;
-        for (int bit : bits) {
-            result = (result << 1) | bit;
+    public static int fitness(int[] bits) {
+        int x = bits[0] + (2 * bits[1]) + (3 * bits[2]) + (4 * bits[3]); // should equal 30
+        if (x > 30) {
+            return x - 30;
         }
-        return result;
-    }
-    public static int fitness(int[] bits){
-        return decodeBinary(bits);//repleace with fitness algorithim
+        return 30 - x;
     }
 
-    public static int[] findTwoLargest(int[] array) {
-    int largest = Integer.MIN_VALUE;
-    int secondLargest = Integer.MIN_VALUE;
-    int largestIndex = -1;
-    int secondLargestIndex = -1;
+    public static int findbiggestIndex(int[] array) {
+        int biggestindex = 0;
 
-    for (int i = 0; i < array.length; i++) {
-        if (array[i] > largest) {
-            secondLargest = largest;
-            secondLargestIndex = largestIndex;
-
-            largest = array[i];
-            largestIndex = i;
-        } else if (array[i] > secondLargest) {
-            secondLargest = array[i];
-            secondLargestIndex = i;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > array[biggestindex]) {
+                biggestindex = i;
+            }
         }
+
+        return biggestindex;
     }
 
-    return new int[]{largest, largestIndex, secondLargest, secondLargestIndex};
-}
-
-    public int[][] chromesomes = {generateRandomBinaryArray(),generateRandomBinaryArray(),generateRandomBinaryArray(),generateRandomBinaryArray()};
-    public int[] scores = {decodeBinary(chromesomes[0]),decodeBinary(chromesomes[1]),decodeBinary(chromesomes[2]),decodeBinary(chromesomes[3])};
+    public static boolean ON = true;
+    public static int epouch = 0;
 
     public static void main(String[] args) {
 
+        /*
+         * int[][] chromosomes = {//initial generate
+         * generateRandomArray(),
+         * generateRandomArray(),
+         * generateRandomArray(),
+         * generateRandomArray(),
+         * generateRandomArray()
+         * };
+         */
+        int[][] chromosomes = { { 1, 2, 3, 21 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 },
+                { 17, 18, 19, 20 } };// for easy testing
+        while (ON) {
+            epouch++;
+            int[] scores = new int[chromosomes.length];
+            double divisor = 0;
+            for (int i = 0; i < chromosomes.length; i++) {
+                int temp = fitness(chromosomes[i]);
+                if (temp == 0) {
+                    System.out.println("correct sequence:" + Arrays.toString(chromosomes[i]));
+                    ON = false;
+                    break;
+                }
+                scores[i] = temp;
+                divisor += (1 / temp);
+            }
+            if (!ON) {
+                break;
+            }
+            double[] percentscores = new double[scores.length];
+            for (int i = 0; i < scores.length; i++) {
+                percentscores[i] = ((1 / scores[i]) / divisor);
+            }
+            // ==========================================
+            // NEW: RANDOM PERCENTAGE SELECTION (Roulette Wheel)
+            // ==========================================
+
+            // Step 1: Spin the wheel (Pick a random number between 0.0 and 1.0)
+            double spin = rand.nextDouble();
+            double runningSum = 0.0;
+            int selectedIndex = 0;
+
+            // Step 2: Cumulative scan to see where the spin lands
+            for (int i = 0; i < percentscores.length; i++) {
+                runningSum += percentscores[i];
+                if (spin <= runningSum) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+
+            System.out.println("Spin landed on: " + spin);
+            System.out.println("Selected Chromosome Index: " + selectedIndex);
+            System.out.println("Selected Chromosome: " + Arrays.toString(chromosomes[selectedIndex]));
+        }
+        System.out.println("epouchs:" + epouch);
     }
 }
