@@ -1,1 +1,1 @@
-# beginnerGAinJava
+# This is a basic implementation of Genetic algorithim for my study
