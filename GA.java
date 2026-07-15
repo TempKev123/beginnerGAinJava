@@ -35,6 +35,7 @@ public class GA {
     public static int epouch = 0;
 
     public static void main(String[] args) {
+        Random rand = new Random();
 
         /*
          * int[][] chromosomes = {//initial generate
@@ -89,6 +90,9 @@ public class GA {
             System.out.println("Spin landed on: " + spin);
             System.out.println("Selected Chromosome Index: " + selectedIndex);
             System.out.println("Selected Chromosome: " + Arrays.toString(chromosomes[selectedIndex]));
+
+
+            ON=false;//safty
         }
         System.out.println("epouchs:" + epouch);
     }
