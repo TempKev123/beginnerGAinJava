@@ -37,7 +37,7 @@ public class GA {
     public static void main(String[] args) {
         Random rand = new Random();
 
-        int[][] chromosomes = new int[5][4];//base chromosomes
+        int[][] chromosomes = new int[5][4];// base chromosomes
         for (int i = 0; i < chromosomes.length; i++) {
             chromosomes[i] = generateRandomArray();
         }
@@ -61,7 +61,7 @@ public class GA {
             }
 
             if (foundSolution) {
-                break;//stop calclations after finding the solution
+                break;// stop calclations after finding the solution
             }
 
             double[] percentscores = new double[scores.length];
@@ -75,17 +75,48 @@ public class GA {
                 int[] parent1 = selectParent(chromosomes, percentscores, rand);
                 int[] parent2 = selectParent(chromosomes, percentscores, rand);
 
-                //Singlepoint split down the middle crossover
-                int[] child = new int[4];
-                child[0] = parent1[0];
-                child[1] = parent1[1];
-                child[2] = parent2[2];
-                child[3] = parent2[3];
+                int safetyCounter = 0; // Prevents an infinite loop
+                while (Arrays.equals(parent1, parent2) && safetyCounter < 10) {
+                    parent2 = selectParent(chromosomes, percentscores, rand);
+                    safetyCounter++;
+                }
 
-                if (rand.nextDouble() < 0.15) {//15% chance of mutation
+                int[] child = new int[4];
+                if (i == 0) {
+                    child[0] = parent1[0];
+                    child[1] = parent2[1];
+                    child[2] = parent2[2];
+                    child[3] = parent2[3];
+                }
+                else if (i == 1) {
+                    child[0] = parent1[0];
+                    child[1] = parent1[1];
+                    child[2] = parent2[2];
+                    child[3] = parent2[3];
+                }
+                else if (i == 2) {
+                    child[0] = parent1[0];
+                    child[1] = parent1[1];
+                    child[2] = parent1[2];
+                    child[3] = parent2[3];
+                }
+                else if (i == 3) {
+                    child[0] = parent2[0];
+                    child[1] = parent1[1];
+                    child[2] = parent1[2];
+                    child[3] = parent1[3];
+                }
+                else {
+                    child[0] = parent2[0];
+                    child[1] = parent2[1];
+                    child[2] = parent1[2];
+                    child[3] = parent1[3];
+                }
+
+                if (rand.nextDouble() < 0.15) {// 15% chance of mutation
                     int mutateGene = rand.nextInt(4);
                     int tweak = rand.nextBoolean() ? 1 : -1;
-                    child[mutateGene] = Math.max(0, child[mutateGene] + tweak); //Make not negative
+                    child[mutateGene] = Math.max(0, child[mutateGene] + tweak); // Make not negative
                 }
 
                 nextGeneration[i] = child;
