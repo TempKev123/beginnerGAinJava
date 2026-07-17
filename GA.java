@@ -116,7 +116,7 @@ public class GA {
                 if (rand.nextDouble() < 0.15) {// 15% chance of mutation
                     int mutateGene = rand.nextInt(4);
                     int tweak = rand.nextBoolean() ? 1 : -1;
-                    child[mutateGene] = Math.max(0, child[mutateGene] + tweak); // Make not negative
+                    child[mutateGene] = Math.max(1, child[mutateGene] + tweak); // Make not negative
                 }
 
                 nextGeneration[i] = child;
