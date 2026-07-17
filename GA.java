@@ -51,7 +51,7 @@ public class GA {
             for (int i = 0; i < chromosomes.length; i++) {
                 double temp = fitness(chromosomes[i]);
                 if (temp == 0) {
-                    System.out.println("Correct sequence found: " + Arrays.toString(chromosomes[i]));
+                    System.out.println("Correct sequence: " + Arrays.toString(chromosomes[i]));
                     foundSolution = true;
                     ON = false; // Stop the loop
                     break;
@@ -120,6 +120,12 @@ public class GA {
                 }
 
                 nextGeneration[i] = child;
+                if (epouch % 100 == 0) {
+                    System.out.println("epoch: " + epouch);
+                    for (int j = 0; j < child.length; j++) {
+                        System.out.println(Arrays.toString(nextGeneration[j]) + " ");
+                    }
+                }
             }
 
             chromosomes = nextGeneration;
