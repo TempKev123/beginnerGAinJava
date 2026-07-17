@@ -6,7 +6,7 @@ public class GA {
         int[] binaryArray = new int[4];
         Random random = new Random();
         for (int i = 0; i < binaryArray.length; i++) {
-            binaryArray[i] = random.nextInt(31); // Generates four under 30 numbers
+            binaryArray[i] = random.nextInt(31)+1; // Generates four 1-30 numbers
         }
         return binaryArray;
     }
